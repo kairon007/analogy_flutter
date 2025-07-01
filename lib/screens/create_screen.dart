@@ -13,7 +13,7 @@ class _CreateScreenState extends State<CreateScreen> {
   String _selectedTone = 'reflective';
   String _analogy = '';
   bool _isGenerating = false;
-  bool _isFavorited = false;
+bool _isFavorited = false;
   final Map<String, Map<String, String>> _mockAnalogies = {
     'food delivery': {
       'reflective':
@@ -62,7 +62,7 @@ class _CreateScreenState extends State<CreateScreen> {
       } else {
         result =
             '"${_textEditingController.text}" today is what patient craftsmanship and community bonds were to our ancestors — a reflection of how human needs persist, even as the methods evolve with tender ingenuity.';
-      }
+    }
       setState(() {
         _analogy = result;
         _isGenerating = false;
