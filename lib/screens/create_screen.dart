@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:analogy_flutter/components/loading_animation.dart';
 
 class CreateScreen extends StatefulWidget {
   const CreateScreen({super.key});
@@ -13,7 +14,7 @@ class _CreateScreenState extends State<CreateScreen> {
   String _selectedTone = 'reflective';
   String _analogy = '';
   bool _isGenerating = false;
-bool _isFavorited = false;
+  bool _isFavorited = false;
   final Map<String, Map<String, String>> _mockAnalogies = {
     'food delivery': {
       'reflective':
@@ -33,8 +34,9 @@ bool _isFavorited = false;
       'humble':
           'What we call \'likes\' were once neighbors pausing their day to genuinely compliment your garden, or friends walking miles just to share in your good news face-to-face.',
       'funny':
-          'Instagram likes are basically the digital equivalent of your grandmother\'s friends nodding approvingly at your school photo while saying \'What a handsome young person!'
-          ',      \'nostalgic\':          \'Before double-taps, validation came from family photo albums passed around parlor rooms, where each image sparked stories and every face was remembered with love.',
+          'Instagram likes are basically the digital equivalent of your grandmother\'s friends nodding approvingly at your school photo while saying \'What a handsome young person!\'',
+      'nostalgic':
+          'Before double-taps, validation came from family photo albums passed around parlor rooms, where each image sparked stories and every face was remembered with love.',
       'emotional':
           'Every heart emoji was once someone taking time to write \'Thinking of you\' on paper, fold it carefully, and trust the postal service to carry their affection across miles.',
     },
@@ -52,22 +54,23 @@ bool _isFavorited = false;
     setState(() {
       _isGenerating = true;
     });
-    //Simulate a network request
-    Future.delayed(const Duration(seconds: 2), () {
-      final inputLower = _textEditingController.text.toLowerCase();
-      String result;
-      if (_mockAnalogies.containsKey(inputLower) &&
-          _mockAnalogies[inputLower]!.containsKey(_selectedTone)) {
-        result = _mockAnalogies[inputLower]![_selectedTone]!;
-      } else {
-        result =
-            '"${_textEditingController.text}" today is what patient craftsmanship and community bonds were to our ancestors — a reflection of how human needs persist, even as the methods evolve with tender ingenuity.';
+    // The actual analogy generation will happen in _onAnalogyComplete after the animation.
+  }
+
+  void _onAnalogyComplete() {
+    final inputLower = _textEditingController.text.toLowerCase();
+    String result;
+    if (_mockAnalogies.containsKey(inputLower) &&
+        _mockAnalogies[inputLower]!.containsKey(_selectedTone)) {
+      result = _mockAnalogies[inputLower]![_selectedTone]!;
+    } else {
+      result =
+          '"${_textEditingController.text}" today is what patient craftsmanship and community bonds were to our ancestors — a reflection of how human needs persist, even as the methods evolve with tender ingenuity.';
     }
-      setState(() {
-        _analogy = result;
-        _isGenerating = false;
-        _isFavorited = false;
-      });
+    setState(() {
+      _analogy = result;
+      _isGenerating = false;
+      _isFavorited = false;
     });
   }
 
@@ -77,7 +80,11 @@ bool _isFavorited = false;
       backgroundColor: const Color(0xFFFAF7F2),
       body: SafeArea(
         child: _isGenerating
-            ? const Center(child: CircularProgressIndicator())
+            ? LoadingAnimation(
+                userInput: _textEditingController.text,
+                tone: _selectedTone,
+                onComplete: _onAnalogyComplete,
+              )
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
