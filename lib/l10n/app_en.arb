@@ -23,5 +23,43 @@
   "categoryLove": "Love",
   "categoryWork": "Work",
   "categoryTechnology": "Technology",
-  "categoryLeisure": "Leisure"
+  "categoryLeisure": "Leisure",
+  
+  "savedTitle": "Your Collection",
+  "savedSubtitle": "{count} saved analogies for reflection",
+  "savedEmptyTitle": "No saved analogies yet",
+  "savedEmptyMessage": "Tap the heart icon on any analogy to save it here for later reflection.",
+  "savedDatePrefix": "Saved {date}",
+  "deleteButton": "Delete",
+  
+  "youTitle": "Your Preferences",
+  "youSubtitle": "Personalize your analogy experience",
+  "notifications": "Notifications",
+  "weeklyReflection": "Weekly Reflection",
+  "weeklyReflectionDesc": "Get a thoughtful analogy every Sunday to reflect on the week",
+  "aboutYou": "About You",
+  "ageGroup": "Age Group",
+  "currentMood": "Current Mood",
+  "interests": "Interests",
+  "chooseInterests": "Choose topics that resonate with you (select multiple)",
+  "appInfo": "App Info",
+  "aboutApp": "About Analogy",
+  "supportApp": "Support the App",
+  
+  "moodSeekingHumility": "Seeking humility",
+  "moodLookingForInspiration": "Looking for inspiration",
+  "moodWantALaugh": "Want a laugh",
+  "moodFeelingNostalgic": "Feeling nostalgic",
+  
+  "interestTechnology": "Technology",
+  "interestPhilosophy": "Philosophy",
+  "interestCulture": "Culture",
+  "interestSimplicity": "Simplicity",
+  "interestHumor": "Humor",
+  "interestHistory": "History",
+  
+  "ageGroup1825": "18-25",
+  "ageGroup2635": "26-35",
+  "ageGroup3650": "36-50",
+  "ageGroup51Plus": "51+"
 }

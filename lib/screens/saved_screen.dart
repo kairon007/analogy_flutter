@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:analogy_flutter/util/extensions.dart';
 @RoutePage()
 class SavedScreen extends StatefulWidget {
   const SavedScreen({super.key});
@@ -44,14 +45,14 @@ class _SavedScreenState extends State<SavedScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(20.0),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   Center(
                     child: Text(
-                      'Your Collection',
-                      style: TextStyle(
+                      context.loc.savedTitle,
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF2C3E50),
@@ -59,10 +60,10 @@ class _SavedScreenState extends State<SavedScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 6),
-                  Center(
+                  const SizedBox(height: 6),
+                   Center(
                     child: Text(
-                      '3 saved analogies for reflection',
+                      context.loc.savedSubtitle(_savedAnalogies.length),//.replaceAll('{count}', _savedAnalogies.length.toString()),
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF8B7355),
@@ -92,7 +93,7 @@ class _SavedScreenState extends State<SavedScreen> {
   }
 
   Widget _buildEmptyState() {
-    return const Center(
+    return  Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -103,7 +104,7 @@ class _SavedScreenState extends State<SavedScreen> {
           ),
           SizedBox(height: 20),
           Text(
-            'No saved analogies yet',
+            context.loc.savedEmptyTitle,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
@@ -112,7 +113,7 @@ class _SavedScreenState extends State<SavedScreen> {
           ),
           SizedBox(height: 10),
           Text(
-            'Tap the heart icon on any analogy to save it here for later reflection.',
+            context.loc.savedEmptyMessage,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -160,7 +161,7 @@ class _SavedScreenState extends State<SavedScreen> {
                 ),
               ),
               Text(
-                'Saved ${analogy['savedDate']}',
+                context.loc.savedDatePrefix( analogy['savedDate']),//.replaceAll('{date}', analogy['savedDate']),
                 style: const TextStyle(
                   fontSize: 12,
                   color: Color(0xFFA0A0A0),

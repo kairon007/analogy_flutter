@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:analogy_flutter/util/extensions.dart';
 @RoutePage()
 class YouScreen extends StatefulWidget {
   const YouScreen({super.key});
@@ -15,21 +16,28 @@ class _YouScreenState extends State<YouScreen> {
   final Set<String> _selectedInterests = {'Philosophy', 'Culture'};
   String _selectedMood = 'Seeking humility';
 
-  final List<String> _ageGroups = ['18-25', '26-35', '36-50', '51+'];
-  final List<String> _interests = [
-    'Technology',
-    'Philosophy',
-    'Culture',
-    'Simplicity',
-    'Humor',
-    'History'
-  ];
-  final List<String> _moods = [
-    'Seeking humility',
-    'Looking for inspiration',
-    'Want a laugh',
-    'Feeling nostalgic'
-  ];
+  List<String> _getAgeGroups() => [
+        context.loc.ageGroup1825,
+        context.loc.ageGroup2635,
+        context.loc.ageGroup3650,
+        context.loc.ageGroup51Plus,
+      ];
+
+  List<String> _getInterests() => [
+        context.loc.interestTechnology,
+        context.loc.interestPhilosophy,
+        context.loc.interestCulture,
+        context.loc.interestSimplicity,
+        context.loc.interestHumor,
+        context.loc.interestHistory,
+      ];
+
+  List<String> _getMoods() => [
+        context.loc.moodSeekingHumility,
+        context.loc.moodLookingForInspiration,
+        context.loc.moodWantALaugh,
+        context.loc.moodFeelingNostalgic,
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +48,9 @@ class _YouScreenState extends State<YouScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const Center(
+               Center(
                 child: Text(
-                  'Your Preferences',
+                  context.loc.youTitle,
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
@@ -52,9 +60,9 @@ class _YouScreenState extends State<YouScreen> {
                 ),
               ),
               const SizedBox(height: 6),
-              const Center(
+               Center(
                 child: Text(
-                  'Personalize your analogy experience',
+                  context.loc.youSubtitle,
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xFF8B7355),
@@ -64,25 +72,25 @@ class _YouScreenState extends State<YouScreen> {
               ),
               const SizedBox(height: 30),
               _buildSection(
-                title: 'Notifications',
+                title: context.loc.notifications,
                 icon: FeatherIcons.bell,
                 child: _buildNotificationSetting(),
               ),
               const SizedBox(height: 20),
               _buildSection(
-                title: 'About You',
+                title: context.loc.aboutYou,
                 icon: FeatherIcons.user,
                 child: _buildAboutYouSection(),
               ),
               const SizedBox(height: 20),
               _buildSection(
-                title: 'Interests',
+                title: context.loc.interests,
                 icon: FeatherIcons.tag,
                 child: _buildInterestsSection(),
               ),
               const SizedBox(height: 20),
               _buildSection(
-                title: 'App Info',
+                title: context.loc.appInfo,
                 icon: FeatherIcons.info,
                 child: _buildAppInfoSection(),
               ),
@@ -138,12 +146,12 @@ class _YouScreenState extends State<YouScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Expanded(
+         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Weekly Reflection',
+                context.loc.weeklyReflection,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -152,7 +160,7 @@ class _YouScreenState extends State<YouScreen> {
               ),
               SizedBox(height: 4),
               Text(
-                'Get a thoughtful analogy every Sunday to reflect on the week',
+                context.loc.weeklyReflectionDesc,
                 style: TextStyle(
                   fontSize: 14,
                   color: Color(0xFF8B7355),
@@ -180,8 +188,8 @@ class _YouScreenState extends State<YouScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Age Group',
+         Text(
+          context.loc.ageGroup,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -192,7 +200,7 @@ class _YouScreenState extends State<YouScreen> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: _ageGroups
+          children: _getAgeGroups()
               .map((age) => _buildOptionChip(
                     label: age,
                     isSelected: _selectedAge == age,
@@ -205,8 +213,8 @@ class _YouScreenState extends State<YouScreen> {
               .toList(),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Current Mood',
+         Text(
+          context.loc.currentMood,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -215,7 +223,7 @@ class _YouScreenState extends State<YouScreen> {
         ),
         const SizedBox(height: 12),
         Column(
-          children: _moods
+          children: _getMoods()
               .map((mood) => _buildMoodButton(
                     label: mood,
                     isSelected: _selectedMood == mood,
@@ -235,8 +243,8 @@ class _YouScreenState extends State<YouScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Choose topics that resonate with you (select multiple)',
+         Text(
+          context.loc.chooseInterests,
           style: TextStyle(
             fontSize: 14,
             color: Color(0xFF8B7355),
@@ -247,7 +255,7 @@ class _YouScreenState extends State<YouScreen> {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: _interests
+          children: _getInterests()
               .map((interest) => _buildOptionChip(
                     label: interest,
                     isSelected: _selectedInterests.contains(interest),
@@ -271,12 +279,12 @@ class _YouScreenState extends State<YouScreen> {
     return Column(
       children: [
         _buildInfoButton(
-          text: 'About Analogy',
+          text: context.loc.aboutApp,
           onPressed: () {},
         ),
         const SizedBox(height: 8),
         _buildInfoButton(
-          text: 'Support the App',
+          text: context.loc.supportApp,
           icon: FeatherIcons.coffee,
           onPressed: () {},
         ),
