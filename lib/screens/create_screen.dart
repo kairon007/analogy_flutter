@@ -265,8 +265,41 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
 
+  double _calculateMaxButtonWidth() {
+    // Find the longest label text
+    final labels = [
+      context.loc.toneReflective,
+      context.loc.toneHumble,
+      context.loc.toneFunny,
+      context.loc.toneNostalgic,
+      context.loc.toneEmotional,
+    ];
+    
+    double maxWidth = 0;
+    final textPainter = TextPainter(
+      textDirection: TextDirection.ltr,
+    );
+    
+    for (final label in labels) {
+      textPainter.text = TextSpan(
+        text: label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      );
+      textPainter.layout();
+      maxWidth = textPainter.width > maxWidth ? textPainter.width : maxWidth;
+    }
+    
+    // Add padding (16 on each side) and some extra space
+    return maxWidth + 48;
+  }
+  
   Widget _buildToneButton(String tone, String label, String emoji) {
     final bool isActive = _selectedTone == tone;
+    final double buttonWidth = _calculateMaxButtonWidth();
+    
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -274,8 +307,9 @@ class _CreateScreenState extends State<CreateScreen> {
         });
       },
       child: Container(
+        width: buttonWidth,
         margin: const EdgeInsets.only(right: 12),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
           color: isActive ? const Color(0xFF8B7355) : Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -285,11 +319,13 @@ class _CreateScreenState extends State<CreateScreen> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(emoji, style: const TextStyle(fontSize: 20)),
             const SizedBox(height: 4),
             Text(
               label,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
