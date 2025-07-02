@@ -181,10 +181,10 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                     ),
                     const SizedBox(height: 15),
-                    SizedBox(
-                      height: 80,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildToneButton('reflective', context.loc.toneReflective, '🧘'),
                           _buildToneButton('humble', context.loc.toneHumble, '🙏'),
