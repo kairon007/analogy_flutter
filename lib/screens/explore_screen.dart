@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:analogy_flutter/util/extensions.dart';
 @RoutePage()
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -12,12 +13,12 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
   String _selectedCategory = 'all';
 
-  final List<Map<String, dynamic>> _categories = [
-    {'id': 'all', 'label': 'All', 'count': 24},
-    {'id': 'love', 'label': 'Love', 'count': 8},
-    {'id': 'work', 'label': 'Work', 'count': 6},
-    {'id': 'technology', 'label': 'Technology', 'count': 5},
-    {'id': 'leisure', 'label': 'Leisure', 'count': 5},
+  List<Map<String, dynamic>> _getCategories(BuildContext context) => [
+    {'id': 'all', 'label': context.loc.categoryAll, 'count': 24},
+    {'id': 'love', 'label': context.loc.categoryLove, 'count': 8},
+    {'id': 'work', 'label': context.loc.categoryWork, 'count': 6},
+    {'id': 'technology', 'label': context.loc.categoryTechnology, 'count': 5},
+    {'id': 'leisure', 'label': context.loc.categoryLeisure, 'count': 5},
   ];
 
   final List<Map<String, dynamic>> _curatedAnalogies = [
@@ -85,13 +86,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
+             Padding(
               padding: EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   Center(
                     child: Text(
-                      'Explore Analogies',
+                      context.loc.exploreTitle,
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -103,7 +104,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   SizedBox(height: 6),
                   Center(
                     child: Text(
-                      'Curated wisdom from past and present',
+                      context.loc.exploreSubtitle,
                       style: TextStyle(
                         fontSize: 14,
                         color: Color(0xFF8B7355),
@@ -119,9 +120,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: _categories.length,
+                itemCount: _getCategories(context).length,
                 itemBuilder: (context, index) {
-                  final category = _categories[index];
+                  final category = _getCategories(context)[index];
                   final bool isActive = _selectedCategory == category['id'];
                   return GestureDetector(
                     onTap: () {

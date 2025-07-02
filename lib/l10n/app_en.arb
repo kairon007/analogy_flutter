@@ -15,5 +15,13 @@
   "shareButton": "Share",
   "saveButton": "Save",
   "savedButton": "Saved",
-  "newAnalogyButton": "New Analogy"
+  "newAnalogyButton": "New Analogy",
+  
+  "exploreTitle": "Explore Analogies",
+  "exploreSubtitle": "Curated wisdom from past and present",
+  "categoryAll": "All",
+  "categoryLove": "Love",
+  "categoryWork": "Work",
+  "categoryTechnology": "Technology",
+  "categoryLeisure": "Leisure"
 }
