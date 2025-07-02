@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'l10n/app_localizations.dart';
+import 'notifiers/localization_provider.dart';
 import 'screens/create_screen.dart';
 import 'screens/explore_screen.dart';
 import 'screens/saved_screen.dart';
 import 'screens/you_screen.dart';
 import 'notifiers/app_notifier.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AppNotifier(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppNotifier>(create: (_) => AppNotifier()),
+        ChangeNotifierProvider<LocalizationProvider>(create: (_) => LocalizationProvider(prefs)),
+
+      ],
       child: const AnalogyApp(),
     ),
   );
@@ -23,6 +33,14 @@ class AnalogyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      locale: context.watch<LocalizationProvider>().locale,
+      supportedLocales: supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       title: 'Analogy',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -59,9 +77,7 @@ class _AppShellState extends State<AppShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
