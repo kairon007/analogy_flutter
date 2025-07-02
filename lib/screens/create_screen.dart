@@ -1,3 +1,4 @@
+import 'package:analogy_flutter/util/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -46,8 +47,8 @@ class _CreateScreenState extends State<CreateScreen> {
   void _generateAnalogy() {
     if (_textEditingController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter something to get an analogy.'),
+        SnackBar(
+          content: Text(context.loc.errorEmptyInput),
         ),
       );
       return;
@@ -91,9 +92,8 @@ class _CreateScreenState extends State<CreateScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Center(
-                      child: Text(
-                        'Analogy',
+                    Center(
+                      child: Text(context.loc.appTitle,
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w700,
@@ -103,9 +103,9 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Center(
+                    Center(
                       child: Text(
-                        'What was this like… back in the day?',
+                        context.loc.appSubtitle,
                         style: TextStyle(
                           fontSize: 16,
                           color: Color(0xFF8B7355),
@@ -114,8 +114,8 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text(
-                      'What modern thing are you curious about?',
+                    Text(
+                      context.loc.inputPrompt,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -145,9 +145,8 @@ class _CreateScreenState extends State<CreateScreen> {
                           Expanded(
                             child: TextField(
                               controller: _textEditingController,
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'e.g., food delivery, Instagram likes...',
+                              decoration: InputDecoration(
+                                hintText: context.loc.inputHint,
                                 border: InputBorder.none,
                                 contentPadding: EdgeInsets.all(16),
                               ),
@@ -173,8 +172,8 @@ class _CreateScreenState extends State<CreateScreen> {
                       ),
                     ),
                     const SizedBox(height: 30),
-                    const Text(
-                      'Choose your lens',
+                    Text(
+                      context.loc.toneSelectionTitle,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -187,11 +186,11 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
-                          _buildToneButton('reflective', 'Reflective', '🧘'),
-                          _buildToneButton('humble', 'Humble', '🙏'),
-                          _buildToneButton('funny', 'Funny', '😂'),
-                          _buildToneButton('nostalgic', 'Nostalgic', '🕰️'),
-                          _buildToneButton('emotional', 'Emotional', '❤️'),
+                          _buildToneButton('reflective', context.loc.toneReflective, '🧘'),
+                          _buildToneButton('humble', context.loc.toneHumble, '🙏'),
+                          _buildToneButton('funny', context.loc.toneFunny, '😂'),
+                          _buildToneButton('nostalgic', context.loc.toneNostalgic, '🕰️'),
+                          _buildToneButton('emotional', context.loc.toneEmotional, '❤️'),
                         ],
                       ),
                     ),
@@ -232,6 +231,7 @@ class _CreateScreenState extends State<CreateScreen> {
                                   icon: _isFavorited
                                       ? Icons.favorite
                                       : Icons.favorite_border,
+
                                   color: _isFavorited
                                       ? const Color(0xFFD2691E)
                                       : const Color(0xFF8B7355),

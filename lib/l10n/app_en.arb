@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Analogy",
+  "appSubtitle": "What was this like… back in the day?",
+  "inputPrompt": "What modern thing are you curious about?",
+  "inputHint": "e.g., food delivery, Instagram likes...",
+  "toneSelectionTitle": "Choose your lens",
+  "toneReflective": "Reflective",
+  "toneHumble": "Humble",
+  "toneFunny": "Funny",
+  "toneNostalgic": "Nostalgic",
+  "toneEmotional": "Emotional",
+  "errorEmptyInput": "Please enter something to get an analogy.",
+  "buttonGenerate": "Generate Analogy",
+  "shareButton": "Share",
+  "saveButton": "Save",
+  "savedButton": "Saved",
+  "newAnalogyButton": "New Analogy"
+}

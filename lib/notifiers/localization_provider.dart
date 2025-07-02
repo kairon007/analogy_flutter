@@ -4,13 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const List<Locale> supportedLocales = [
   Locale('en', ''), // English
-  Locale('hi', ''), // Hindi
+ /* Locale('hi', ''), // Hindi
   Locale('bn', ''), // Bengali
   Locale('ta', ''), // Tamil
   Locale('te', ''), // Telugu
   Locale('mr', ''), // Marathi
   Locale('kn', ''), // Kannada
-  Locale('gu', ''), // Gujarati
+  Locale('gu', ''), // Gujarati*/
 ];
 class LocalizationProvider extends ChangeNotifier {
   final SharedPreferences _preferences;
