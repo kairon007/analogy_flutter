@@ -79,6 +79,90 @@ class _CreateScreenState extends State<CreateScreen> {
     });
   }
 
+  void _showExpandedView() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [
+                  // Full Before-After in bottom sheet
+                  GestureDetector(
+                    onTap: () {
+                      // Optional: Tap to expand image even in bottom sheet
+
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: BeforeAfter(
+                        before: Image.asset(_beforeImage, fit: BoxFit.cover),
+                        after: Image.asset(_afterImage, fit: BoxFit.cover),
+                        value: _sliderValue,
+                        onValueChanged: (value) => setState(() => _sliderValue = value),
+                        thumbColor: const Color(0xFF8B7355),
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Full text
+                  Text(
+                    _analogy,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      height: 1.5,
+                      color: Color(0xFF2C3E50),
+                      fontFamily: 'serif',
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Action buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildActionButton(
+                        icon: _isFavorited ? Icons.favorite : Icons.favorite_border,
+                        color: _isFavorited ? const Color(0xFFD2691E) : const Color(0xFF8B7355),
+                        onPressed: () {
+                          setState(() {
+                            _isFavorited = !_isFavorited;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 20),
+                      _buildActionButton(
+                        icon: FeatherIcons.share,
+                        color: const Color(0xFF8B7355),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(width: 20),
+                      _buildActionButton(
+                        icon: FeatherIcons.rotateCcw,
+                        color: const Color(0xFF8B7355),
+                        onPressed: _generateAnalogy,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -252,131 +336,31 @@ class _CreateScreenState extends State<CreateScreen> {
                                   // Before-After comparison section with adjusted height
                                   SizedBox(
                                     height: availableHeight - textHeight - (spacing * 3) - estimatedButtonHeight - estimatedExpandButtonHeight,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        // Tap to expand: Show full-screen dialog with larger BeforeAfter
-                                        showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true, // Allow full height
-                                          builder: (context) => DraggableScrollableSheet(
-                                            expand: false,
-                                            initialChildSize: 0.9, // Start at 90% height
-                                            minChildSize: 0.5,
-                                            maxChildSize: 0.9,
-                                            builder: (context, scrollController) => Container(
-                                              color: Colors.white,
-                                              child: SingleChildScrollView(
-                                                controller: scrollController,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(24.0),
-                                                  child: Column(
-                                                    children: [
-                                                      // Full Before-After in bottom sheet
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          // Optional: Tap to expand image even in bottom sheet
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) => Dialog(
-                                                              backgroundColor: Colors.transparent,
-                                                              child: BeforeAfter(
-                                                                before: Image.asset(_beforeImage),
-                                                                after: Image.asset(_afterImage),
-                                                                value: _sliderValue,
-                                                                onValueChanged: (value) => setState(() => _sliderValue = value),
-                                                                height: double.infinity,
-                                                                thumbColor: const Color(0xFFD2691E),
-                                                                thumbDecoration: BoxDecoration(
-                                                                  shape: BoxShape.circle,
-                                                                  color: const Color(0xFFD2691E),
-                                                                  boxShadow: [
-                                                                    BoxShadow(
-                                                                      color: Colors.black.withOpacity(0.2),
-                                                                      blurRadius: 4,
-                                                                      offset: const Offset(0, 2),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        child: ClipRRect(
-                                                          borderRadius: BorderRadius.circular(12),
-                                                          child: BeforeAfter(
-                                                            before: Image.asset(_beforeImage, fit: BoxFit.cover),
-                                                            after: Image.asset(_afterImage, fit: BoxFit.cover),
-                                                            value: _sliderValue,
-                                                            onValueChanged: (value) => setState(() => _sliderValue = value),
-                                                            thumbColor: const Color(0xFF8B7355),
-                                                            overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 20),
-                                                      // Full text
-                                                      Text(
-                                                        _analogy,
-                                                        textAlign: TextAlign.center,
-                                                        style: const TextStyle(
-                                                          fontSize: 17,
-                                                          height: 1.5,
-                                                          color: Color(0xFF2C3E50),
-                                                          fontFamily: 'serif',
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 20),
-                                                      // Action buttons
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.center,
-                                                        children: [
-                                                          _buildActionButton(
-                                                            icon: _isFavorited ? Icons.favorite : Icons.favorite_border,
-                                                            color: _isFavorited ? const Color(0xFFD2691E) : const Color(0xFF8B7355),
-                                                            onPressed: () {
-                                                              setState(() {
-                                                                _isFavorited = !_isFavorited;
-                                                              });
-                                                            },
-                                                          ),
-                                                          const SizedBox(width: 20),
-                                                          _buildActionButton(
-                                                            icon: FeatherIcons.share,
-                                                            color: const Color(0xFF8B7355),
-                                                            onPressed: () {},
-                                                          ),
-                                                          const SizedBox(width: 20),
-                                                          _buildActionButton(
-                                                            icon: FeatherIcons.rotateCcw,
-                                                            color: const Color(0xFF8B7355),
-                                                            onPressed: _generateAnalogy,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                    child: Stack(
+                                      children: [
+                                        // Clickable image area
+                                        Positioned.fill(
+                                          child: GestureDetector(
+                                            onTap: _showExpandedView,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(12),
+                                              child: BeforeAfter(
+                                                before: Image.asset(_beforeImage, fit: BoxFit.cover),
+                                                after: Image.asset(_afterImage, fit: BoxFit.cover),
+                                                value: _sliderValue,
+                                                onValueChanged: (value) => setState(() => _sliderValue = value),
+                                                thumbColor: const Color(0xFF8B7355),
+                                                overlayColor: MaterialStateProperty.all(Colors.transparent),
                                               ),
                                             ),
                                           ),
-                                        );
-                                      },
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: BeforeAfter(
-                                          before: Image.asset(_beforeImage, fit: BoxFit.cover), // Add fit to ensure image covers the area
-                                          after: Image.asset(_afterImage, fit: BoxFit.cover), // Add fit for better visibility
-                                          value: _sliderValue,
-                                          onValueChanged: (value) => setState(() => _sliderValue = value),
-                                          thumbColor: const Color(0xFF8B7355),
-                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ),
                                   const SizedBox(height: spacing),
                                   // Text section: Show only two lines with ellipsis
-                                  Text(
+                                  GestureDetector(child: Text(
                                     _analogy,
                                     textAlign: TextAlign.center,
                                     maxLines: 2,
@@ -387,121 +371,9 @@ class _CreateScreenState extends State<CreateScreen> {
                                       color: Color(0xFF2C3E50),
                                       fontFamily: 'serif',
                                     ),
-                                  ),
+                                  ),onTap:(){_showExpandedView();}),
                                   // Expand button for full card content in bottom sheet
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.expand_more,
-                                      color: Color(0xFF8B7355),
-                                    ),
-                                    onPressed: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isScrollControlled: true, // Allow full height
-                                        builder: (context) => DraggableScrollableSheet(
-                                          expand: false,
-                                          initialChildSize: 0.9, // Start at 90% height
-                                          minChildSize: 0.5,
-                                          maxChildSize: 0.9,
-                                          builder: (context, scrollController) => Container(
-                                            color: Colors.white,
-                                            child: SingleChildScrollView(
-                                              controller: scrollController,
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(24.0),
-                                                child: Column(
-                                                  children: [
-                                                    // Full Before-After in bottom sheet
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        // Optional: Tap to expand image even in bottom sheet
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (context) => Dialog(
-                                                            backgroundColor: Colors.transparent,
-                                                            child: BeforeAfter(
-                                                              before: Image.asset(_beforeImage),
-                                                              after: Image.asset(_afterImage),
-                                                              value: _sliderValue,
-                                                              onValueChanged: (value) => setState(() => _sliderValue = value),
-                                                              height: double.infinity,
-                                                              thumbColor: const Color(0xFFD2691E),
-                                                              thumbDecoration: BoxDecoration(
-                                                                shape: BoxShape.circle,
-                                                                color: const Color(0xFFD2691E),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors.black.withOpacity(0.2),
-                                                                    blurRadius: 4,
-                                                                    offset: const Offset(0, 2),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(12),
-                                                        child: BeforeAfter(
-                                                          before: Image.asset(_beforeImage, fit: BoxFit.cover),
-                                                          after: Image.asset(_afterImage, fit: BoxFit.cover),
-                                                          value: _sliderValue,
-                                                          onValueChanged: (value) => setState(() => _sliderValue = value),
-                                                          thumbColor: const Color(0xFF8B7355),
-                                                          overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 20),
-                                                    // Full text
-                                                    Text(
-                                                      _analogy,
-                                                      textAlign: TextAlign.center,
-                                                      style: const TextStyle(
-                                                        fontSize: 17,
-                                                        height: 1.5,
-                                                        color: Color(0xFF2C3E50),
-                                                        fontFamily: 'serif',
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 20),
-                                                    // Action buttons
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      children: [
-                                                        _buildActionButton(
-                                                          icon: _isFavorited ? Icons.favorite : Icons.favorite_border,
-                                                          color: _isFavorited ? const Color(0xFFD2691E) : const Color(0xFF8B7355),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              _isFavorited = !_isFavorited;
-                                                            });
-                                                          },
-                                                        ),
-                                                        const SizedBox(width: 20),
-                                                        _buildActionButton(
-                                                          icon: FeatherIcons.share,
-                                                          color: const Color(0xFF8B7355),
-                                                          onPressed: () {},
-                                                        ),
-                                                        const SizedBox(width: 20),
-                                                        _buildActionButton(
-                                                          icon: FeatherIcons.rotateCcw,
-                                                          color: const Color(0xFF8B7355),
-                                                          onPressed: _generateAnalogy,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
+
                                   const SizedBox(height: spacing),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
