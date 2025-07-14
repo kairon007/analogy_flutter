@@ -56,7 +56,7 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
   final ValueNotifier<List<bool>> _sceneVisibility = ValueNotifier<List<bool>>([]);
   
   // Orbital animation values
-  static const double _orbitRadius = 100.0;
+  static const double _orbitRadius = 120.0; // Increased to accommodate larger circle
   static const double _orbitSpeed = 0.5; // rotations per second
 
   final _phrases = {
@@ -204,7 +204,7 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
     // Gradually increase the orbit radius for a smooth transition
     radii[index] = _orbitRadius;
     // Slightly randomize the scale for a more organic feel
-    scales[index] = 0.4 + _random.nextDouble() * 0.2;
+    scales[index] = 0.35 + _random.nextDouble() * 0.15;
     
     _sceneRadii.value = radii;
     _sceneScales.value = scales;
@@ -293,27 +293,32 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
                                           scale: scales[index],
                                           child: Container(
                                             key: _sceneKeys[index],
-                                            width: 200,
-                                            height: 200,
+                                            width: 160, // Slightly smaller to fit the circle
+                                            height: 160,
                                             decoration: BoxDecoration(
-                                              color: Colors.transparent,
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black.withOpacity(0.2),
                                                   blurRadius: 15,
-                                                  spreadRadius: 5,
+                                                  spreadRadius: 2,
+                                                  offset: const Offset(0, 5),
                                                 )
                                               ],
                                             ),
-                                            child: Lottie.asset(
-                                              _scenes[index]['lottie'],
-                                              controller: index == _currentSceneIndex.value ? _lottieController : null,
-                                              fit: BoxFit.contain,
-                                              onLoaded: index == _currentSceneIndex.value ? (composition) {
-                                                _lottieController
-                                                  ..duration = composition.duration
-                                                  ..repeat();
-                                              } : null,
+                                            padding: const EdgeInsets.all(20), // Padding to keep content within circle
+                                            child: ClipOval(
+                                              child: Lottie.asset(
+                                                _scenes[index]['lottie'],
+                                                controller: index == _currentSceneIndex.value ? _lottieController : null,
+                                                fit: BoxFit.contain,
+                                                onLoaded: index == _currentSceneIndex.value ? (composition) {
+                                                  _lottieController
+                                                    ..duration = composition.duration
+                                                    ..repeat();
+                                                } : null,
+                                              ),
                                             ),
                                           ),
                                         ),
