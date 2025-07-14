@@ -1,3 +1,4 @@
+import 'package:analogy_flutter/components/analogy_widget.dart';
 import 'package:analogy_flutter/util/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -196,68 +197,7 @@ class _CreateScreenState extends State<CreateScreen> {
                     ),
                     const SizedBox(height: 30),
                     if (_analogy.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: const Color(0xFFE8DCC0)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF8B7355).withOpacity(0.15),
-                              spreadRadius: 4,
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              _analogy,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 17,
-                                height: 1.5,
-                                color: Color(0xFF2C3E50),
-                                fontFamily: 'serif',
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildActionButton(
-                                  icon: _isFavorited
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-
-                                  color: _isFavorited
-                                      ? const Color(0xFFD2691E)
-                                      : const Color(0xFF8B7355),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isFavorited = !_isFavorited;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 20),
-                                _buildActionButton(
-                                  icon: FeatherIcons.share,
-                                  color: const Color(0xFF8B7355),
-                                  onPressed: () {},
-                                ),
-                                const SizedBox(width: 20),
-                                _buildActionButton(
-                                  icon: FeatherIcons.rotateCcw,
-                                  color: const Color(0xFF8B7355),
-                                  onPressed: _generateAnalogy,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      AnalogyWidget(analogy: _analogy, isFavorited: _isFavorited),
                   ],
                 ),
               ),
@@ -340,22 +280,5 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
 
-  Widget _buildActionButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onPressed,
-  }) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFAF7F2),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: const Color(0xFFE8DCC0)),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-    );
-  }
+
 }
