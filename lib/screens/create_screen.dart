@@ -1,9 +1,10 @@
-import 'package:analogy_flutter/components/analogy_widget.dart';
 import 'package:analogy_flutter/util/extensions.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:before_after/before_after.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:analogy_flutter/components/loading_animation.dart';
+
 @RoutePage()
 class CreateScreen extends StatefulWidget {
   const CreateScreen({super.key});
@@ -18,6 +19,7 @@ class _CreateScreenState extends State<CreateScreen> {
   String _analogy = '';
   bool _isGenerating = false;
   bool _isFavorited = false;
+  double _sliderValue = 0.5;
   final Map<String, Map<String, String>> _mockAnalogies = {
     'food delivery': {
       'reflective':
@@ -47,11 +49,9 @@ class _CreateScreenState extends State<CreateScreen> {
 
   void _generateAnalogy() {
     if (_textEditingController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(context.loc.errorEmptyInput),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.loc.errorEmptyInput)));
       return;
     }
     setState(() {
@@ -94,7 +94,8 @@ class _CreateScreenState extends State<CreateScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Text(context.loc.appTitle,
+                      child: Text(
+                        context.loc.appTitle,
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.w700,
@@ -187,17 +188,221 @@ class _CreateScreenState extends State<CreateScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildToneButton('reflective', context.loc.toneReflective, '🧘'),
-                          _buildToneButton('humble', context.loc.toneHumble, '🙏'),
-                          _buildToneButton('funny', context.loc.toneFunny, '😂'),
-                          _buildToneButton('nostalgic', context.loc.toneNostalgic, '🕰️'),
-                          _buildToneButton('emotional', context.loc.toneEmotional, '❤️'),
+                          _buildToneButton(
+                            'reflective',
+                            context.loc.toneReflective,
+                            '🧘',
+                          ),
+                          _buildToneButton(
+                            'humble',
+                            context.loc.toneHumble,
+                            '🙏',
+                          ),
+                          _buildToneButton(
+                            'funny',
+                            context.loc.toneFunny,
+                            '😂',
+                          ),
+                          _buildToneButton(
+                            'nostalgic',
+                            context.loc.toneNostalgic,
+                            '🕰️',
+                          ),
+                          _buildToneButton(
+                            'emotional',
+                            context.loc.toneEmotional,
+                            '❤️',
+                          ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 30),
                     if (_analogy.isNotEmpty)
-                      AnalogyWidget(analogy: _analogy, isFavorited: _isFavorited),
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFE8DCC0)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF8B7355).withOpacity(0.15),
+                              spreadRadius: 4,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            // Before-After comparison section with equal space allocation
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Tap to expand: Show full-screen dialog with larger BeforeAfter
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      child: BeforeAfter(
+                                        before: Image.asset('assets/images/before.jpg'),
+                                        // e.g., 'assets/before.png'
+                                        after: Image.asset('assets/images/after.jpg'),
+                                        // e.g., 'assets/after.png'
+                                        value: _sliderValue,
+                                        onValueChanged: (value) => setState(
+                                          () => _sliderValue = value,
+                                        ),
+                                        height: double.infinity,
+                                        // Full height in dialog
+                                        thumbColor: const Color(0xFFD2691E),
+                                        thumbDecoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: const Color(0xFFD2691E),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(
+                                                0.2,
+                                              ),
+                                              blurRadius: 4,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: BeforeAfter(
+                                    before: Image.asset('assets/images/before.jpg'),
+                                    // e.g., 'assets/before.png'
+                                    after: Image.asset('assets/images/after.jpg'),
+                                    // Replace with your after image path or NetworkImage
+                                    value: _sliderValue,
+                                    onValueChanged: (value) =>
+                                        setState(() => _sliderValue = value),
+                                    thumbColor: const Color(0xFF8B7355),
+                                    overlayColor: MaterialStateProperty.all(
+                                      Colors.transparent,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            // Text section with scroll if needed, equal importance via Expanded
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  _analogy,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    height: 1.5,
+                                    color: Color(0xFF2C3E50),
+                                    fontFamily: 'serif',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildActionButton(
+                                  icon: _isFavorited
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: _isFavorited
+                                      ? const Color(0xFFD2691E)
+                                      : const Color(0xFF8B7355),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFavorited = !_isFavorited;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 20),
+                                _buildActionButton(
+                                  icon: FeatherIcons.share,
+                                  color: const Color(0xFF8B7355),
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                _buildActionButton(
+                                  icon: FeatherIcons.rotateCcw,
+                                  color: const Color(0xFF8B7355),
+                                  onPressed: _generateAnalogy,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    /*Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFE8DCC0)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF8B7355).withOpacity(0.15),
+                              spreadRadius: 4,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              _analogy,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 17,
+                                height: 1.5,
+                                color: Color(0xFF2C3E50),
+                                fontFamily: 'serif',
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildActionButton(
+                                  icon: _isFavorited
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+
+                                  color: _isFavorited
+                                      ? const Color(0xFFD2691E)
+                                      : const Color(0xFF8B7355),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFavorited = !_isFavorited;
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 20),
+                                _buildActionButton(
+                                  icon: FeatherIcons.share,
+                                  color: const Color(0xFF8B7355),
+                                  onPressed: () {},
+                                ),
+                                const SizedBox(width: 20),
+                                _buildActionButton(
+                                  icon: FeatherIcons.rotateCcw,
+                                  color: const Color(0xFF8B7355),
+                                  onPressed: _generateAnalogy,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),*/
                   ],
                 ),
               ),
@@ -214,32 +419,27 @@ class _CreateScreenState extends State<CreateScreen> {
       context.loc.toneNostalgic,
       context.loc.toneEmotional,
     ];
-    
+
     double maxWidth = 0;
-    final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
-    
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
+
     for (final label in labels) {
       textPainter.text = TextSpan(
         text: label,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       );
       textPainter.layout();
       maxWidth = textPainter.width > maxWidth ? textPainter.width : maxWidth;
     }
-    
+
     // Add padding (16 on each side) and some extra space
     return maxWidth + 48;
   }
-  
+
   Widget _buildToneButton(String tone, String label, String emoji) {
     final bool isActive = _selectedTone == tone;
     final double buttonWidth = _calculateMaxButtonWidth();
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -280,5 +480,22 @@ class _CreateScreenState extends State<CreateScreen> {
     );
   }
 
-
+  Widget _buildActionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAF7F2),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFE8DCC0)),
+        ),
+        child: Icon(icon, color: color, size: 20),
+      ),
+    );
+  }
 }
