@@ -94,12 +94,12 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
     final phrases = _phrases[widget.tone] ?? _phrases['reflective']!;
 
     return [
-      {
+     /* {
         'lottie': 'assets/lottie/typewriter.json',
         'sound': 'sounds/typewriter_clunk.mp3',
         'phrase': phrases[_random.nextInt(phrases.length)],
         'duration': const Duration(seconds: 3),
-      },
+      },*/
       {
         'lottie': 'assets/lottie/memory_book.json',
         'sound': 'sounds/page_flip.mp3',
