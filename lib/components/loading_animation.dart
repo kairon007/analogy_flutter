@@ -56,7 +56,7 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
   final ValueNotifier<List<bool>> _sceneVisibility = ValueNotifier<List<bool>>([]);
   
   // Orbital animation values
-  static const double _orbitRadius = 120.0; // Increased to accommodate larger circle
+  static const double _orbitRadius = 120.0; // Increased to accommodate larger circle and better spacing
   static const double _orbitSpeed = 0.5; // rotations per second
 
   final _phrases = {
@@ -203,8 +203,8 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
     
     // Gradually increase the orbit radius for a smooth transition
     radii[index] = _orbitRadius;
-    // Slightly randomize the scale for a more organic feel
-    scales[index] = 0.35 + _random.nextDouble() * 0.15;
+    // For central item, keep it larger; for orbiting items, make them smaller
+    scales[index] = radii[index] == 0 ? 1.0 : 0.35 + _random.nextDouble() * 0.15;
     
     _sceneRadii.value = radii;
     _sceneScales.value = scales;
@@ -266,11 +266,16 @@ class _LoadingAnimationContentState extends State<_LoadingAnimationContent>
                                     // Calculate position based on angle and radius
                                     final angle = angles[index] + orbitValue;
                                     final radius = radii[index];
-                                    final centerX = MediaQuery.of(context).size.width / 2 - 100;
-                                    final centerY = MediaQuery.of(context).size.height / 2 - 100;
+                                    final centerX = MediaQuery.of(context).size.width / 2 - 80; // Half of 160 (circle width)
+                                    final centerY = MediaQuery.of(context).size.height / 2 - 80; // Half of 160 (circle height)
                                     
-                                    final x = centerX + radius * cos(angle);
-                                    final y = centerY + radius * sin(angle);
+                                    // For central item (radius = 0), position at center
+                                    final x = radius > 0 
+                                        ? centerX + radius * cos(angle) 
+                                        : centerX;
+                                    final y = radius > 0 
+                                        ? centerY + radius * sin(angle) 
+                                        : centerY;
                                     
                                     // Add slight 3D tilt based on position
                                     final tiltX = sin(angle) * 0.1;
