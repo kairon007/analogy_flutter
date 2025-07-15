@@ -12,6 +12,7 @@ import 'screens/explore_screen.dart';
 import 'screens/saved_screen.dart';
 import 'screens/you_screen.dart';
 import 'notifiers/app_notifier.dart';
+import 'providers/user_settings_provider.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ void main() async{
       providers: [
         ChangeNotifierProvider<AppNotifier>(create: (_) => AppNotifier()),
         ChangeNotifierProvider<LocalizationProvider>(create: (_) => LocalizationProvider(prefs)),
+        ChangeNotifierProvider<UserSettingsProvider>(create: (_) => UserSettingsProvider(prefs)),
 
       ],
       child: const AnalogyApp(),

@@ -5,6 +5,7 @@ import 'package:analogy_flutter/screens/create/widgets/expanded_analogy_view.dar
 import 'package:analogy_flutter/screens/create/widgets/header.dart';
 import 'package:analogy_flutter/screens/create/widgets/input_field.dart';
 import 'package:analogy_flutter/screens/create/widgets/tone_selection.dart';
+import 'package:analogy_flutter/models/analogy.dart';
 import 'package:analogy_flutter/util/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class CreateScreen extends StatefulWidget {
 class _CreateScreenState extends State<CreateScreen> {
   final TextEditingController _textEditingController = TextEditingController();
   String _selectedTone = 'reflective';
-  String _analogy = '';
+  Analogy _analogy = Analogy(text: '');
   bool _isGenerating = false;
   bool _isFavorited = false;
   double _sliderValue = 0.5;
@@ -75,8 +76,13 @@ class _CreateScreenState extends State<CreateScreen> {
       result =
           '"${_textEditingController.text}" today is what patient craftsmanship and community bonds were to our ancestors — a reflection of how human needs persist, even as the methods evolve with tender ingenuity.';
     }
+    
     setState(() {
-      _analogy = result;
+      _analogy = Analogy(
+        text: result,
+        images: [_beforeImage, _afterImage],
+        tags: [_textEditingController.text, _selectedTone],
+      );
       _isGenerating = false;
       _isFavorited = false;
     });
@@ -87,9 +93,9 @@ class _CreateScreenState extends State<CreateScreen> {
       context: context,
       isScrollControlled: true,
       builder: (context) => ExpandedAnalogyView(
-        analogy: _analogy,
-        beforeImage: _beforeImage,
-        afterImage: _afterImage,
+        analogy: _analogy.text,
+        beforeImage: _analogy.images?.firstOrNull ?? _beforeImage,
+        afterImage: _analogy.images?.lastOrNull ?? _afterImage,
         sliderValue: _sliderValue,
         onSliderChanged: (value) => setState(() => _sliderValue = value),
         isFavorited: _isFavorited,
@@ -129,11 +135,11 @@ class _CreateScreenState extends State<CreateScreen> {
                           setState(() => _selectedTone = tone),
                     ),
                     const SizedBox(height: 30),
-                    if (_analogy.isNotEmpty)
+                    if (_analogy.text.isNotEmpty)
                       AnalogyCard(
-                        analogy: _analogy,
-                        beforeImage: _beforeImage,
-                        afterImage: _afterImage,
+                        analogy: _analogy.text,
+                        beforeImage: _analogy.images?.firstOrNull ?? _beforeImage,
+                        afterImage: _analogy.images?.lastOrNull ?? _afterImage,
                         sliderValue: _sliderValue,
                         onSliderChanged: (value) =>
                             setState(() => _sliderValue = value),
