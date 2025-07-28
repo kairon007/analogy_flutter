@@ -1,6 +1,8 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:provider/provider.dart';
+import 'package:analogy_flutter/providers/user_settings_provider.dart';
 import 'package:analogy_flutter/util/extensions.dart';
 @RoutePage()
 class YouScreen extends StatefulWidget {
@@ -11,10 +13,13 @@ class YouScreen extends StatefulWidget {
 }
 
 class _YouScreenState extends State<YouScreen> {
-  bool _weeklyReminders = true;
-  String _selectedAge = '26-35';
-  final Set<String> _selectedInterests = {'Philosophy', 'Culture'};
-  String _selectedMood = 'Seeking humility';
+  late UserSettingsProvider _userSettingsProvider;
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _userSettingsProvider = Provider.of<UserSettingsProvider>(context, listen: false);
+  }
 
   List<String> _getAgeGroups() => [
         context.loc.ageGroup1825,
@@ -143,135 +148,170 @@ class _YouScreenState extends State<YouScreen> {
   }
 
   Widget _buildNotificationSetting() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                context.loc.weeklyReflection,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2C3E50),
-                ),
+    return Consumer<UserSettingsProvider>(
+      builder: (context, settingsProvider, _) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.loc.weeklyReflection,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2C3E50),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    context.loc.weeklyReflectionDesc,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF8B7355),
+                      height: 1.4,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 4),
-              Text(
-                context.loc.weeklyReflectionDesc,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Color(0xFF8B7355),
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Switch(
-          value: _weeklyReminders,
-          onChanged: (value) {
-            setState(() {
-              _weeklyReminders = value;
-            });
-          },
-          activeTrackColor: const Color(0xFF8B7355),
-          activeColor: const Color(0xFFFAF7F2),
-        ),
-      ],
+            ),
+            Switch(
+              value: settingsProvider.userSettings.weeklyReminders,
+              onChanged: (value) {
+                settingsProvider.updateWeeklyReminders(value);
+              },
+              activeTrackColor: const Color(0xFF8B7355),
+              activeColor: const Color(0xFFFAF7F2),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildAboutYouSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-         Text(
-          context.loc.ageGroup,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2C3E50),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _getAgeGroups()
-              .map((age) => _buildOptionChip(
-                    label: age,
-                    isSelected: _selectedAge == age,
-                    onSelected: () {
-                      setState(() {
-                        _selectedAge = age;
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
-        const SizedBox(height: 20),
-         Text(
-          context.loc.currentMood,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF2C3E50),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Column(
-          children: _getMoods()
-              .map((mood) => _buildMoodButton(
-                    label: mood,
-                    isSelected: _selectedMood == mood,
-                    onSelected: () {
-                      setState(() {
-                        _selectedMood = mood;
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
-      ],
+    return Consumer<UserSettingsProvider>(
+      builder: (context, settingsProvider, _) {
+        final userSettings = settingsProvider.userSettings;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.loc.ageGroup,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF2C3E50),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: _getAgeGroups().map((ageGroup) {
+                final isSelected = userSettings.ageGroup == ageGroup;
+                return ChoiceChip(
+                  label: Text(ageGroup),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) {
+                      settingsProvider.updateAgeGroup(ageGroup);
+                    }
+                  },
+                  backgroundColor: Colors.white,
+                  selectedColor: const Color(0xFF8B7355),
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.white : const Color(0xFF2C3E50),
+                  ),
+                  side: BorderSide(
+                    color: isSelected
+                        ? const Color(0xFF8B7355)
+                        : const Color(0xFFE8DCC0),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              context.loc.currentMood,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF2C3E50),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: _getMoods().map((mood) {
+                final isSelected = userSettings.mood == mood;
+                return ChoiceChip(
+                  label: Text(mood),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    if (selected) {
+                      settingsProvider.updateMood(mood);
+                    }
+                  },
+                  backgroundColor: Colors.white,
+                  selectedColor: const Color(0xFF8B7355),
+                  labelStyle: TextStyle(
+                    color: isSelected ? Colors.white : const Color(0xFF2C3E50),
+                  ),
+                  side: BorderSide(
+                    color: isSelected
+                        ? const Color(0xFF8B7355)
+                        : const Color(0xFFE8DCC0),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        );
+      },
     );
   }
 
   Widget _buildInterestsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-         Text(
-          context.loc.chooseInterests,
-          style: TextStyle(
-            fontSize: 14,
-            color: Color(0xFF8B7355),
-            height: 1.4,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _getInterests()
-              .map((interest) => _buildOptionChip(
-                    label: interest,
-                    isSelected: _selectedInterests.contains(interest),
-                    onSelected: () {
-                      setState(() {
-                        if (_selectedInterests.contains(interest)) {
-                          _selectedInterests.remove(interest);
-                        } else {
-                          _selectedInterests.add(interest);
-                        }
-                      });
-                    },
-                  ))
-              .toList(),
-        ),
-      ],
+    return Consumer<UserSettingsProvider>(
+      builder: (context, settingsProvider, _) {
+        final userSettings = settingsProvider.userSettings;
+
+        return Wrap(
+          spacing: 8.0,
+          runSpacing: 8.0,
+          children: _getInterests().map((interest) {
+            final isSelected = userSettings.interests.contains(interest);
+            return ChoiceChip(
+              label: Text(interest),
+              selected: isSelected,
+              onSelected: (selected) {
+                final updatedInterests = Set<String>.from(userSettings.interests);
+                if (selected) {
+                  updatedInterests.add(interest);
+                } else {
+                  updatedInterests.remove(interest);
+                }
+                settingsProvider.updateInterests(updatedInterests);
+              },
+              backgroundColor: Colors.white,
+              selectedColor: const Color(0xFF8B7355),
+              labelStyle: TextStyle(
+                color: isSelected ? Colors.white : const Color(0xFF2C3E50),
+              ),
+              side: BorderSide(
+                color: isSelected
+                    ? const Color(0xFF8B7355)
+                    : const Color(0xFFE8DCC0),
+              ),
+            );
+          }).toList(),
+        );
+      },
     );
   }
 
